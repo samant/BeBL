@@ -1,4 +1,5 @@
 GemListing::Application.routes.draw do
+  mount Tolk::Engine => "/tolk"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
