@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'rails',                    '3.2.3'
 gem 'mysql2',                   '0.3.11'
-gem 'tolk',                     '1.1.0'
 gem 'cocoon',                   '1.0.21'
 gem 'devise',                   '2.1.0'
 gem 'cancan',                   '1.6.7'
@@ -20,6 +19,7 @@ group :assets do
   gem 'jquery-rails',            '2.0.2'
   gem 'bootstrap-sass',          '2.0.3'
   gem 'compass-rails',           '1.0.1'
+  gem 'highcharts-rails',        '2.2.4'
 end                              
 
 group :development do

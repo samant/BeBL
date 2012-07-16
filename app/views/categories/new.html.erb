@@ -1,0 +1,14 @@
+<%= content_for :title do %>
+	Create new category
+<% end %>
+<%= content_for :actions do %>
+	<%= link_to "Back", categories_path, :class => "btn" %>
+<% end %>
+
+<%= bootstrap_form_for(@category, :html => { :class => 'form-horizontal' }) do |f| -%>
+	<%= render "layouts/error_messages", :target => @category %>
+	
+  <%= render :partial => "form", :locals => {:f => f}%>
+	
+	<%= f.submit "Create", :disable_with => "Please wait ...", :back => categories_path -%>
+<% end %>

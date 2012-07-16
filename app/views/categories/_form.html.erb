@@ -1,0 +1,5 @@
+<%= f.text_field :name %>
+
+<%= f.select :cattype, options_for_select( Category::TYPE , (f.object.cattype.present? ? f.object.cattype : nil) ), {:include_blank => 'Select a type'}, :label => "Type" %>
+
+<%= f.text_area :description %>

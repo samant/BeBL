@@ -1,0 +1,41 @@
+<%= content_for :title do %>
+	Listing components (<%= @type.capitalize %>)
+<% end %>
+<%= content_for :actions do %>
+  <%= link_to 'New component', new_component_path, :title => "Create a new component", :class => "btn btn-info" if can? :create, Component %>
+<% end %>
+
+<p>Status filter: <% (["all"] + Component::TYPE.values).each do |ctype| %>
+  <%= link_to raw("<span class='label #{ctype == @type ? 'label-info' : ''}'>#{ctype}</span>"), components_path(:type => ctype) %>
+<% end %>
+</p>
+
+<% if @components.any? %>
+  <table class="table table-striped">
+    <tr>
+      <th><%= sort_link "Name", :name %></th>
+      <th>Type</th>
+      <th>Final categories</th>
+      <th>Technical categories</th>
+      <th>Usage</th>
+      <th>Actions</th>
+    </tr>
+    <% @components.each do |component| %>
+      <tr>
+        <td><%= component.name %></td>
+        <td><%= component.ctype %></td>
+        <td><%= list_link(component.categories.by_type("final")) %></td>
+        <td><%= list_link(component.categories.by_type("technical")) %></td>
+        <td><%= number_to_percentage(component.usage , :precision => 2) %></td>
+        <td><%= link_to 'Show', component_path(component), :title => "Show this component", :class => "btn btn-info" if can? :read, Component %>
+            <%= link_to 'Edit', edit_component_path(component), :title => "Edit this component", :class => "btn btn-success" if can? :edit, Component %>
+            <%= link_to 'Destroy', component, :confirm => 'Are you sure?', :method => :delete, :class => "btn btn-danger" if can? :destroy, Component %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <%= paginate @components %>
+  <%# graphique des usage des gems avec affichage des gems par ordre d'utilisation %>
+<% else %>
+  <p>No components</p>
+<% end %>

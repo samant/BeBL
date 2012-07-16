@@ -1,0 +1,6 @@
+- flash.each do |name, msg|
+  - if msg.is_a?(String)
+    .alert{:class => "#{name}"}
+      %a.close{ :data => { :dismiss => :alert } }
+        ×
+      = msg

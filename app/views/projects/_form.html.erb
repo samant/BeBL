@@ -1,0 +1,49 @@
+<%= f.text_field :name %>
+<%= f.text_field :client_name, :label => "Client" %>
+<%= f.text_field :estimated_duration, :label => "Estimated development duration" %>
+<%= f.text_field :real_duration, :label => "Real development duration" %>
+<%= f.text_field :github_address, :label => "Git repository" %>
+<%= f.text_field :staging_address, :label => "Staging server" %>
+<%= f.text_field :staging_account, :label => "Staging user account"%>
+<%= f.text_field :staging_password, :label => "Staging password" %>
+<%= f.text_field :production_address, :label => "Production server" %>
+<%= f.text_field :production_account, :label => "Production user account" %>
+<%= f.text_field :production_password, :label => "Production password" %>
+
+<% users = User.all %>
+<% if users.any? %>
+  <%= hidden_field_tag "project_manager_ids_none", nil, :name => "project[manager_ids][]"  %>
+  <%= f.collection_check_boxes :manager_ids, User.all , :id, :name, :label => "Managers" %>
+
+  <%= hidden_field_tag "project_developer_ids_none", nil, :name => "project[developer_ids][]"  %>
+  <%= f.collection_check_boxes :developer_ids, User.all , :id, :name, :label => "Developers" %>
+<% end %>
+
+<%= hidden_field_tag "project_category_ids_none", nil, :name => "project[category_ids][]"  %>
+<% Category::TYPE.each do |key, value| %>
+  <% cats = Category.by_type(value) %>
+  <% if cats.any? %>
+    <%= f.collection_check_boxes :category_ids, cats , :id, :name, :label => "#{key} categories" %>
+  <% end %>
+<% end %>
+
+<%= hidden_field_tag "project_component_ids_none", nil, :name => "project[component_ids][]"  %>
+<% Component::TYPE.each do |key, value| %>
+  <% cops = Component.by_type(value) %>
+  <% if cops.any? %>
+    <%= f.collection_check_boxes :component_ids, cops , :id, :name, :label => "#{key}" %>
+  <% end %>
+<% end %>
+
+<%= f.text_area :description %>
+<div class="control-group">
+  <%= f.label :attachments, "Attached files", :class => "control-label" %>
+  <div class="controls">
+    <%= f.fields_for :attachments do |attach| %>
+      <%= render :partial => 'attachment_fields', :locals => {:f => attach} %>
+    <% end %>
+    <div class="links">
+      <%= link_to_add_association 'Add file', f, :attachments %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<%= content_for :title do %>
+	Create new component
+<% end %>
+<%= content_for :actions do %>
+	<%= link_to "Back", components_path, :class => "btn" %>
+<% end %>
+
+<%= bootstrap_form_for(@component, :html => { :class => 'form-horizontal' }) do |f| -%>
+	<%= render "layouts/error_messages", :target => @component %>
+	
+  <%= render :partial => "form", :locals => {:f => f}%>
+	
+	<%= f.submit "Create", :disable_with => "Please wait ...", :back => components_path -%>
+<% end %>

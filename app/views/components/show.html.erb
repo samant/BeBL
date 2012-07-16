@@ -1,0 +1,38 @@
+<%= content_for :title do %>
+	<%= @component.name %>
+<% end %>
+<%= content_for :actions do %>
+	<%= link_to "Back", components_path, :class => "btn" %>
+	<%= link_to "Edit", edit_component_path(@component), :title => "Edit this component", :class => "btn btn-info" if can? :edit, Category %>
+<% end %>
+
+<p>Name: <%= @component.name %></p>
+<p>Type: <%= @component.ctype %></p>
+<p>Description: <%= @component.description %></p>
+<% Category::TYPE.each do |key, value| %>
+  <% cats = @component.categories.by_type(value) %>
+  <% if cats.any? %>
+    <p><%= key %> categories: <%= list_link(cats) %></p>
+  <% end %>
+<% end %>
+<p>Projects: <%= list_link(@component.projects) %></p>
+<p>Usage: <%= number_to_percentage(@component.usage , :precision => 2) %></p>
+<% if @component.total_usage > 0 %>
+  <p>Users:</p>
+  <table class="table table-striped">
+    <tr>
+      <th>User</th>
+      <th>Projects</th>
+      <th>Usage (Total: <%= @component.total_usage %>)</th>
+    </tr>
+    <% @component.users.each do |user, usage| %>
+      <tr>
+        <td><%= link_to user.name, user_path(user) %></td>
+        <td><%= list_link(user.projects_for_component(@component)) %></td>
+        <td><%= usage %></td>
+      </tr>
+    <% end %>
+  </table>
+  
+  <%# graphique %>
+<% end %>

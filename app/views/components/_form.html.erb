@@ -1,0 +1,14 @@
+<%= f.text_field :name %>
+
+<%= f.select :ctype, options_for_select( Component::TYPE , (f.object.ctype.present? ? f.object.ctype : nil) ), {:include_blank => 'Select a type'}, :label => "Type" %>
+
+<%= hidden_field_tag "component_category_ids_none", nil, :name => "component[category_ids][]"  %>
+
+<% Category::TYPE.each do |key, value| %>
+  <% cats = Category.by_type(value) %>
+  <% if cats.any? %>
+    <%= f.collection_check_boxes :category_ids, cats , :id, :name, :label => "#{key} categories" %>
+  <% end %>
+<% end %>
+
+<%= f.text_area :description %>

@@ -1,0 +1,36 @@
+<%= content_for :title do %>
+	Listing categories (<%= @type.capitalize %>)
+<% end %>
+<%= content_for :actions do %>
+  <%= link_to 'New category', new_category_path, :title => "Create a new category", :class => "btn btn-info" if can? :create, Category %>
+<% end %>
+
+<p>Status filter: <% (["all"] + Category::TYPE.values).each do |cattype| %>
+  <%= link_to raw("<span class='label #{cattype == @type ? 'label-info' : ''}'>#{cattype}</span>"), categories_path(:type => cattype) %>
+<% end %>
+</p>
+
+<% if @categories.any? %>
+  <table class="table table-striped">
+    <tr>
+      <th><%= sort_link "Name", :name %></th>
+      <th>Type</th>
+      <th>Experience</th>
+      <th>Actions</th>
+    </tr>
+    <% @categories.each do |category| %>
+      <tr>
+        <td><%= category.name %></td>
+        <td><%= category.cattype %></td>
+        <td><%= number_to_percentage(category.experience , :precision => 2)  %></td>
+        <td><%= link_to 'Show', category_path(category), :title => "Show this category", :class => "btn btn-info" if can? :read, Category %>
+            <%= link_to 'Edit', edit_category_path(category), :title => "Edit this category", :class => "btn btn-success" if can? :edit, Category %>
+            <%= link_to 'Destroy', category, :confirm => 'Are you sure?', :method => :delete, :class => "btn btn-danger" if can? :destroy, Category %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <%= paginate @categories %>
+<% else %>
+  <p>No categories</p>
+<% end %>

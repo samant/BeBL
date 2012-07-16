@@ -1,0 +1,31 @@
+<%= content_for :title do %>
+	Listing projects
+<% end %>
+<%= content_for :actions do %>
+  <%= link_to 'New project', new_project_path, :title => "Create a new project", :class => "btn btn-info" if can? :create, Project %>
+<% end %>
+
+<% if @projects.any? %>
+  <table class="table table-striped">
+    <tr>
+      <th><%= sort_link "Name", :name %></th>
+      <th>Managers</th>
+      <th>Developers</th>
+      <th>Actions</th>
+    </tr>
+    <% @projects.each do |project| %>
+      <tr>
+        <td><%= project.name %></td>
+        <td><%= list_link(project.managers) %></td>
+        <td><%= list_link(project.developers) %></td>
+        <td><%= link_to 'Show', project_path(project), :title => "Show this project", :class => "btn btn-info" if can? :read, Project %>
+            <%= link_to 'Edit', edit_project_path(project), :title => "Edit this project", :class => "btn btn-success" if can? :edit, Project %>
+            <%= link_to 'Destroy', project, :confirm => 'Are you sure?', :method => :delete, :class => "btn btn-danger" if can? :destroy, Project %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <%= paginate @projects %>
+<% else %>
+  <p>No projects</p>
+<% end %>

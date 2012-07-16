@@ -1,0 +1,15 @@
+<%= content_for :title do %>
+  Edit component <%= @component.name %>
+<% end %>
+<%= content_for :actions do %>
+	<%= link_to "Back", components_path, :class => "btn" %>
+	<%= link_to "Show", component_path(@component), :title => "Show this component", :class => "btn btn-info" if can? :read, Component %>
+<% end %>
+
+<%= bootstrap_form_for(@component, :html => { :class => 'form-horizontal' }) do |f| -%>
+	<%= render "layouts/error_messages", :target => @component %>
+	
+  <%= render :partial => "form", :locals => {:f => f}%>
+	
+	<%= f.submit "Update", :disable_with => "Please wait ...", :back => components_path -%>
+<% end %>

@@ -1,0 +1,6 @@
+<div class='nested-fields'>
+  <%= f.hidden_field :file_cache %>
+  <%= File.basename(f.object.file.url) if f.object.file? %>
+  <%= f.file_field :file unless f.object.file? %>  
+  <%= link_to_remove_association "Delete this file", f %>
+</div>

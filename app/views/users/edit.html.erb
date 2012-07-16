@@ -1,0 +1,19 @@
+<%= content_for :title do %>
+  Edit user <%= @user.name %>
+<% end %>
+<%= content_for :actions do %>
+	<%= link_to "Back", users_path, :class => "btn" %>
+	<%= link_to "Show", user_path(@user), :title => "Show this user", :class => "btn btn-info" if can? :read, User %>
+<% end %>
+
+<%= bootstrap_form_for(@user, :html => { :class => 'form-horizontal' }) do |f| -%>
+	<%= render "layouts/error_messages", :target => @user %>
+	
+  <%= f.text_field :name %>
+
+  <%= f.email_field :email %>
+  
+  <%= f.select :role, options_for_select( User::RLS )%>
+	
+	<%= f.submit "Update", :disable_with => "Please wait ...", :back => users_path -%>
+<% end %>

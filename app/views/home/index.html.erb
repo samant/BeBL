@@ -1,0 +1,70 @@
+<%= content_for :title do %>
+	Dashboard
+<% end %>
+<%= content_for :actions do %>
+<% end %>
+
+<ul class="nav nav-tabs" id="dashboard_tab">
+  <% Category::TYPE.each do |key, value| %>
+    <li><%= link_to "#{key} skills", "##{value}", "data-toggle" => "tab" %></li>
+  <% end %>
+  <% Component::TYPE.each do |key, value| %>
+    <li><%= link_to "#{key} ranking", "##{value}", "data-toggle" => "tab" %></li>
+  <% end %>
+</ul>
+
+<div class="tab-content">
+  <% Category::TYPE.each do |key, value| %>
+    <div class="tab-pane" id="<%= value %>" >
+      <% if Category.skills_for_type(value).any? %>
+        <table class="table table-striped">
+          <tr>
+            <th>Skill</th>
+            <th>Projects</th>
+            <th>Usage (Total: <%= Category.total_skills_for_type(value) %>)</th>
+          </tr>
+          <% Category.skills_for_type(value).each do |skill, projects| %>
+              <tr>
+                <td><%= link_to skill.name, category_path(skill) %></td>
+                <td><%= list_link(projects) %></td>
+                <td><%= projects.count %></td>
+              </tr>
+          <% end %>
+        </table>
+        <%# graphique %>
+      <% else %>
+        <p>None</p>
+      <% end %>
+    </div>
+  <% end %>
+  
+  <% Component::TYPE.each do |key, value| %>
+    <div class="tab-pane" id="<%= value %>" >
+      <% if Component.total_usage_by_type(value) > 0 %>
+        <table class="table table-striped">
+          <tr>
+            <th>Components</th>
+            <th>Projects</th>
+            <th>Usage (Total: <%= Component.total_usage_by_type(value) %>)</th>
+          </tr>
+            <% comps = Component.usage_by_type(value) %>
+            <% if comps.any? %>
+              <% comps.each do |comp, usage| %>
+                <tr>
+                  <% comp = Component.find(comp) %>
+                  <td><%= link_to comp.name, component_path(comp) %></td>
+                  <td><%= list_link(comp.projects) %></td>
+                  <td><%= usage %></td>
+                </tr>
+              <% end %>
+            <% end %>
+        </table>
+        <%# graphique %>
+      <% else %>
+        <p>None</p>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+

@@ -1,0 +1,35 @@
+<%= content_for :title do %>
+	<%= @project.name %>
+<% end %>
+<%= content_for :actions do %>
+	<%= link_to "Back", projects_path, :class => "btn" %>
+	<%= link_to "Edit", edit_project_path(@project), :title => "Edit this project", :class => "btn btn-info" if can? :edit, Project %>
+<% end %>
+
+<p>Name: <%= @project.name %></p>
+<p>Client: <%= @project.client_name %></p>
+<p>Description: <%= @project.description %></p>
+<p>Estimated development duration: <%= @project.estimated_duration %></p>
+<p>Real development duration: <%= @project.real_duration %></p>
+<p>Git repository: <%= @project.github_address %></p>
+<p>Staging server: <%= @project.staging_address %></p>
+<p>Staging user account: <%= @project.staging_account %></p>
+<p>Staging password: <%= @project.staging_password %></p>
+<p>Production server: <%= @project.production_address %></p>
+<p>Production user account: <%= @project.production_account %></p>
+<p>Production password: <%= @project.production_password %></p>
+<p>Managers: <%= list_link(@project.managers) %></p>
+<p>Developers: <%= list_link(@project.developers) %></p>
+<% Component::TYPE.each do |key, value| %>
+  <% comps = @project.components.by_type(value) %>
+  <% if comps.any? %>
+    <p><%= key %>: <%= list_link(comps) %></p>
+  <% end %>
+<% end %>
+<% Category::TYPE.each do |key, value| %>
+  <% cats = @project.categories.by_type(value) %>
+  <% if cats.any? %>
+    <p><%= key %> categories: <%= list_link(cats) %></p>
+  <% end %>
+<% end %>
+<p>Files: <%= list_link_files(@project.attachments)  %></p>

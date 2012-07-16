@@ -1,0 +1,68 @@
+<%= content_for :title do %>
+	<%= @user.name %>
+<% end %>
+<%= content_for :actions do %>
+	<%= link_to "Back", users_path, :class => "btn" %>
+	<%= link_to "Edit", edit_user_path(@user), :title => "Edit this user", :class => "btn btn-info" if can? :edit, User %>
+<% end %>
+
+<p>Name: <%= @user.name %></p>
+<p>Email: <%= @user.email %></p>
+<% if can? :edit, User %>
+  <p>Role: <%= @user.role %></p>
+<% end %>
+<p>Manage: <%= list_link(@user.managed_projects) %></p>
+<p>Develop: <%= list_link(@user.developed_projects) %></p>
+<p>Components: </p>
+<% if @user.total_component_usage %>
+  <table class="table table-striped">
+    <tr>
+      <th>Components</th>
+      <th>Projects</th>
+      <th>Usage (Total: <%= @user.total_component_usage %>)</th>
+    </tr>
+    <% Component::TYPE.each do |key, value| %>
+      <% comps = @user.components_usage_by_type(value) %>
+      <% if comps.any? %>
+        <tr>
+          <td><b><%= key %></b></td>
+          <td></td>
+          <td>(Total: <%= @user.total_component_usage_by_type(value) %>)</td>
+        </tr>
+        <% comps.each do |comp, usage| %>
+          <tr>
+            <% comp = Component.find(comp) %>
+            <td><%= link_to comp.name, component_path(comp) %></td>
+            <td><%= list_link(@user.projects_for_component(comp)) %></td>
+            <td><%= usage %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    <% end %>
+  </table>
+  <%# graphique %>
+<% else %>
+  <p>None</p>
+<% end %>
+<p>Skills:</p>
+<% if @user.skills.any? %>
+  <table class="table table-striped">
+    <tr>
+      <th>Skill</th>
+      <th>Type</th>
+      <th>Projects</th>
+      <th>Usage (Total: <%= @user.total_skills %>)</th>
+    </tr>
+    <% @user.skills.each do |skill, projects| %>
+        <tr>
+          <td><%= link_to skill.name, category_path(skill) %></td>
+          <td><%= skill.cattype %></td>
+          <td><%= list_link(projects) %></td>
+          <td><%= projects.count %></td>
+        </tr>
+    <% end %>
+  </table>
+  <%# graphique %>
+<% else %>
+  <p>None</p>
+<% end %>

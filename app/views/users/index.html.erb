@@ -1,0 +1,31 @@
+<%= content_for :title do %>
+	Listing users
+<% end %>
+<%= content_for :actions do %>
+<% end %>
+
+<% if @users.any? %>
+  <table class="table table-striped">
+    <tr>
+      <th><%= sort_link "Name", :name %></th>
+      <th><%= sort_link "Email", :email %></th>
+      <th><%= sort_link "Role", :role %></th>
+      <th>Actions</th>
+    </tr>
+  
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.role %></td>
+        <td><%= link_to 'Show', user_path(user), :title => "Show this user", :class => "btn btn-info" if can? :read, User %>
+            <%= link_to 'Edit', edit_user_path(user), :title => "Edit this user", :class => "btn btn-success" if can? :edit, User %>
+            <%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete, :class => "btn btn-danger" if can? :destroy, User %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <%= paginate @users %>
+<% else %>
+  <p>No users</p>
+<% end %>

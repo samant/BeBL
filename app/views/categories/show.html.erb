@@ -1,0 +1,66 @@
+<%= content_for :title do %>
+	<%= @category.name %>
+<% end %>
+<%= content_for :actions do %>
+	<%= link_to "Back", categories_path, :class => "btn" %>
+	<%= link_to "Edit", edit_category_path(@category), :title => "Edit this category", :class => "btn btn-info" if can? :edit, Category %>
+<% end %>
+
+<p>Name: <%= @category.name %></p>
+<p>Type: <%= @category.cattype %></p>
+<p>Description: <%= @category.description %></p>
+<p>Projects: <%=list_link(@category.projects)%></p>
+<p>Experience: <%= number_to_percentage(@category.experience , :precision => 2)  %></p>
+<p>Users:</p>
+<% if @category.masters.any? %>
+  <table class="table table-striped">
+    <tr>
+      <th>User</th>
+      <th>Projects</th>
+      <th>Usage (Total: <%= @category.total_masters %>)</th>
+    </tr>
+    <% @category.masters.each do |user, projects| %>
+        <tr>
+          <td><%= link_to user.name, user_path(user) %></td>
+          <td><%= list_link(projects) %></td>
+          <td><%= projects.count %></td>
+        </tr>
+    <% end %>
+  </table>
+  <%# graphique %>
+<% else %>
+  <p>None</p>
+<% end %>
+<p>Components:</p>
+<% if @category.total_component_usage %>
+  <table class="table table-striped">
+    <tr>
+      <th>Components</th>
+      <th>Projects</th>
+      <th>Usage (Total: <%= @category.total_component_usage %>)</th>
+    </tr>
+    <% Component::TYPE.each do |key, value| %>
+      <% comps = @category.components_usage_by_type(value) %>
+      <% if comps.any? %>
+        <tr>
+          <td><b><%= key %></b></td>
+          <td></td>
+          <td>(Total: <%= @category.total_component_usage_by_type(value) %>)</td>
+        </tr>
+        <% comps.each do |comp, usage| %>
+          <tr>
+            <% comp = Component.find(comp) %>
+            <td><%= link_to comp.name, component_path(comp) %></td>
+            <td><%= list_link(comp.projects) %></td>
+            <td><%= usage %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    <% end %>
+  </table>
+  <%# graphique %>
+<% else %>
+  <p>None</p>
+<% end %>
+<%# #indiquer en plus le nombre de fois que chaque user a exprime la compétence (via projet et gems) %>
+<%# tenir compte des users, des categories des projets et des categories des components%>
